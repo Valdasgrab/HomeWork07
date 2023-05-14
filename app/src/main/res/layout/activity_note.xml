@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:gravity="center"
-            android:hint="text01"
+            android:hint="Note"
             android:textSize="20sp" />
 
         <EditText
@@ -38,8 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="32dp"
-            android:gravity="center"
-            android:hint="text02"
+            android:gravity="start"
+            android:hint="Details"
             android:textSize="20sp" />
 
     </LinearLayout>
