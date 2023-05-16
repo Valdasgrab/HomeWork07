@@ -21,6 +21,7 @@ class NoteDetails: ActivityLifecycles() {
         idEditText = findViewById(R.id.idEditText)
         noteNameEditText = findViewById(R.id.text01EditText)
         detailsEditText = findViewById(R.id.text02EditText)
+ //       dateAndTime = findViewById(R.id.text03TextView)
         closeButton = findViewById(R.id.closeButton)
         saveButton = findViewById(R.id.saveButton)
 
@@ -46,7 +47,7 @@ class NoteDetails: ActivityLifecycles() {
             finishIntent.putExtra(SECOND_ACTIVITY_ITEM_ID, (idEditText.text.toString()).toInt())
             finishIntent.putExtra(SECOND_ACTIVITY_ITEM_TEXT01, noteNameEditText.text.toString())
             finishIntent.putExtra(SECOND_ACTIVITY_ITEM_TEXT02, detailsEditText.text.toString())
-//            finishIntent.putExtra(SECOND_ACTIVITY_ITEM_DATE, )
+  //          finishIntent.putExtra(SECOND_ACTIVITY_ITEM_DATE, dateAndTime.text.toString())
             setResult(RESULT_OK, finishIntent)
             finish()
         }
@@ -55,7 +56,7 @@ class NoteDetails: ActivityLifecycles() {
         const val SECOND_ACTIVITY_ITEM_ID = "package lt.vcs.androidtopics.secondactivity_item_id"
         const val SECOND_ACTIVITY_ITEM_TEXT01 = "package lt.vcs.androidtopics.secondactivity_item_text01"
         const val SECOND_ACTIVITY_ITEM_TEXT02 = "package lt.vcs.androidtopics.secondactivity_item_text02"
-        const val SECOND_ACTIVITY_ITEM_DATE = "package lt.vcs.androidtopics.secondactivity_item_text03"
+  //      const val SECOND_ACTIVITY_ITEM_DATE = "package lt.vcs.androidtopics.secondactivity_item_text03"
 
     }
     private fun setClickListenerOfCloseButton() {

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import androidx.activity.result.contract.ActivityResultContracts
+import java.time.LocalDateTime
 
 class Notes : AppCompatActivity() {
 
@@ -55,7 +56,7 @@ class Notes : AppCompatActivity() {
             itemIntent.putExtra(MAIN_ACTIVITY_ITEM_ID, note.id)
             itemIntent.putExtra(MAIN_ACTIVITY_ITEM_TEXT01, note.name)
             itemIntent.putExtra(MAIN_ACTIVITY_ITEM_TEXT02, note.details)
-            itemIntent.putExtra(MAIN_ACTIVITY_ITEM_DATE, note.updateNameAndDetails(note.name,note.details))
+ //           itemIntent.putExtra(MAIN_ACTIVITY_ITEM_DATE, note.updateNameAndDetails(note.name,note.details))
             startActivity(itemIntent)
         }
     }
@@ -84,6 +85,7 @@ class Notes : AppCompatActivity() {
                             ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_ITEM_TEXT01) ?: "",
                         details = result.data
                             ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_ITEM_TEXT02) ?: "",
+                        updateDate = LocalDateTime.now()
                         )
                     adapter.add(note)
                 }
