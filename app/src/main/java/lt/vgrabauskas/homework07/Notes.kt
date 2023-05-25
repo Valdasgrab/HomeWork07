@@ -7,10 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import lt.vgrabauskas.homework07.databinding.ActivityMainBinding
 import java.time.LocalDateTime
 
-class MainActivity : ActivityLifecycles() {
+class Notes : ActivityLifecycles() {
 
     private lateinit var adapter: CustomAdapter
-    private var itemIndex = 1
+    private var noteIndex = 1
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,6 @@ class MainActivity : ActivityLifecycles() {
 
         val notes = mutableListOf<Note>()
         setUpListView()
-        generateListOfNotes(notes)
         updateAdapter(notes)
 
 
@@ -34,25 +33,15 @@ class MainActivity : ActivityLifecycles() {
 //        adapter.add(notes)
 //    }
 
-    private fun generateListOfNotes(notes: MutableList<Note>) {
-        for (note in 1..5) {
-            notes.add(
-                Note(
-                    note,
-                    "text01%04x".format(note),
-                    "text02%09x".format(note)
-                )
-            )
-        }
-    }
+
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(MAIN_ACTIVITY_SAVE_INSTANCE_STATE_ITEM_INDEX, itemIndex)
+        outState.putInt(MAIN_ACTIVITY_SAVE_INSTANCE_STATE_ITEM_INDEX, noteIndex)
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        itemIndex = savedInstanceState.getInt(MAIN_ACTIVITY_SAVE_INSTANCE_STATE_ITEM_INDEX)
+        noteIndex = savedInstanceState.getInt(MAIN_ACTIVITY_SAVE_INSTANCE_STATE_ITEM_INDEX)
     }
 
 
@@ -64,12 +53,12 @@ class MainActivity : ActivityLifecycles() {
     private fun updateAdapter(notes: MutableList<Note>) {
         adapter.add(notes)
         adapter.add(Note(101, "text01", "text02", LocalDateTime.now()))
-//        adapter.add(
-//            Note(102, "text01", "text02"),
-//            Note(103, "text01", "text02"),
-//            Note(104, "text01", "text02"),
-//            Note(105, "text01", "text02"),
-//        )
+        adapter.add(
+            Note(102, "text01", "text02"),
+            Note(103, "text01", "text02"),
+            Note(104, "text01", "text02"),
+            Note(105, "text01", "text02"),
+        )
     }
 
     private fun setClickOpenNoteActivity() {
@@ -81,10 +70,12 @@ class MainActivity : ActivityLifecycles() {
     private fun setClickOpenNoteDetails() {
         binding.noteListView.setOnItemClickListener { adapterView, view, position, l ->
             val note: Note = adapterView.getItemAtPosition(position) as Note
-            itemIndex = position
+            noteIndex = position
 
             val noteIntent = Intent(this, NoteDetails::class.java)
-            noteIntent.putExtra(MAIN_ACTIVITY_ITEM_ID, note)
+            noteIntent.putExtra(MAIN_ACTIVITY_ITEM_ID, note.id)
+            noteIntent.putExtra(MAIN_ACTIVITY_ITEM_NAME, note.name)
+            noteIntent.putExtra(MAIN_ACTIVITY_ITEM_DETAILS, note.details)
             startActivityForResult.launch(noteIntent)
         }
     }
@@ -92,32 +83,42 @@ class MainActivity : ActivityLifecycles() {
     private val startActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
-                NoteDetails.SECOND_ACTIVITY_ITEM_INTENT_RETURN_NEW -> {
-                    val note: Note = getExtraFromParcelable(result.data)
+                NoteDetails.SECOND_ACTIVITY_NOTE_INTENT_RETURN_NEW -> {
+                    val note = Note(
+                        id = result.data
+                            ?.getIntExtra(NoteDetails.SECOND_ACTIVITY_NOTE_ID, 0) ?: 0,
+                        name = result.data
+                            ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_NOTE_NAME) ?: "",
+                        details = result.data
+                            ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_NOTE_DETAILS) ?: ""
+                    )
+
                     adapter.add(note)
                 }
-                NoteDetails.SECOND_ACTIVITY_ITEM_INTENT_RETURN_UPDATE -> {
-                    val item = getExtraFromParcelable(result.data)
-                    if (itemIndex >= 0) {
-                        adapter.update(itemIndex, item)
+
+                NoteDetails.SECOND_ACTIVITY_NOTE_INTENT_RETURN_UPDATE -> {
+                    val note = Note(
+                        id = result.data
+                            ?.getIntExtra(NoteDetails.SECOND_ACTIVITY_NOTE_ID, 0) ?: 0,
+                        name = result.data
+                            ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_NOTE_NAME) ?: "",
+                        details = result.data
+                            ?.getStringExtra(NoteDetails.SECOND_ACTIVITY_NOTE_DETAILS) ?: ""
+                    )
+
+                    if (noteIndex >= 0) {
+                        adapter.update(noteIndex, note)
                     }
                 }
             }
         }
 
-    private fun getExtraFromParcelable(result: Intent?) =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            result?.getParcelableExtra(MAIN_ACTIVITY_ITEM_ID, Note::class.java)
-                ?: Note(0, "", "")
-        } else {
-            result?.getParcelableExtra(MAIN_ACTIVITY_ITEM_ID)
-                ?: Note(0, "", "")
-        }
+
 
     companion object {
         const val MAIN_ACTIVITY_ITEM_ID = "package lt.vgrabauskas.homework07_item_id"
-        const val MAIN_ACTIVITY_ITEM_TEXT01 = "package lt.vgrabauskas.homework07_item_text01"
-        const val MAIN_ACTIVITY_ITEM_TEXT02 = "package lt.vgrabauskas.homework07_item_text02"
+        const val MAIN_ACTIVITY_ITEM_NAME = "package lt.vgrabauskas.homework07_item_text01"
+        const val MAIN_ACTIVITY_ITEM_DETAILS = "package lt.vgrabauskas.homework07_item_text02"
         const val MAIN_ACTIVITY_ITEM_DATE = "package lt.vgrabauskas.homework07_item_text02"
         const val MAIN_ACTIVITY_SAVE_INSTANCE_STATE_ITEM_INDEX =
             "package lt.vgrabauskas.homework07_save_instance_state_item_index"

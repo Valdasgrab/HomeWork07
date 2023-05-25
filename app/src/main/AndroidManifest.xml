@@ -15,7 +15,7 @@
         android:name=".NoteDetails"
         android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Notes"
             android:exported="true">
 
             <intent-filter>

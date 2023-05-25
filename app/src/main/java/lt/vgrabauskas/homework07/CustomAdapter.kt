@@ -5,19 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
 import lt.vgrabauskas.homework07.databinding.NoteBinding
+import java.time.LocalDateTime
 
 class CustomAdapter(context: Context) : BaseAdapter() {
 
     private val inflater = LayoutInflater.from(context)
     private val list = mutableListOf<Note>()
 
-    var maxId: Any = if (list.isEmpty()){
-        -1
-    } else {
-        list.maxBy { note -> note.id }.id
-    }
-        private set
     fun add (vararg note: Note) {
         list.addAll(note)
         notifyDataSetChanged()
@@ -26,25 +22,11 @@ class CustomAdapter(context: Context) : BaseAdapter() {
         list.addAll(notes)
         notifyDataSetChanged()
     }
-
     fun update(index: Int, note: Note) {
         list.set(index, note)
         notifyDataSetChanged()
     }
-    fun clear() {
-        list.clear()
-        notifyDataSetChanged()
-    }
 
-    fun remove(vararg note: Note) {
-        list.removeAll(note)
-        notifyDataSetChanged()
-    }
-
-    fun remove(notes: List<Note>) {
-        list.removeAll(notes)
-        notifyDataSetChanged()
-    }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         val binding: NoteBinding
@@ -60,16 +42,14 @@ class CustomAdapter(context: Context) : BaseAdapter() {
         binding.idTextView.text = list[position].id.toString()
         binding.text01TextView.text = list[position].name
         binding.text02TextView.text = list[position].details
-        binding.creationDateTextView.text = list[position].creationDate.toString()
-        binding.updateDateTextView.text = list[position].updateDate.toString()
+        binding.text03TextView.text = list[position].creationDate.toString()
+        binding.text04TextView.text = list[position].updateDate.toString()
+
         return view
     }
     override fun getCount(): Int =list.size
 
     override fun getItem(position: Int): Any = list[position]
 
-    override fun getItemId(position: Int): Long = position.toLong()
-
-
-
+    override fun getItemId(position: Int) = position.toLong()
 }
